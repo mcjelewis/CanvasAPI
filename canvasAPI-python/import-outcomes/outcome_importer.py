@@ -24,8 +24,8 @@
 ##################################################
 ################## DIRECTIONS ####################
 ##################################################
-# DIRECTIONS: Edit the below two variables to match your institution domain and your personal token
-domain = "ewu.beta.instructure.com"
+# DIRECTIONS: Edit the below variable to match your institution domain
+domain = "enter your domain here"
 
 ##################################################
 ########## DO NOT EDIT BELOW THIS LINE ###########
