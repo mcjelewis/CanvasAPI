@@ -21,7 +21,7 @@ At the end of the header row add the rating scale title that will be used for th
 
 The point values for each rating are placed in the data row under each outcome scale title.   
 
-Note that for eace csv file, only one rating scale can be used.  
+Note that for each csv file, only one rating scale can be used.  
 
 
 ##################################################
