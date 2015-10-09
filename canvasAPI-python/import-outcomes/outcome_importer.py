@@ -9,7 +9,7 @@
 #This code is used to upload new outcomes into Canvas at an account level. Data from an uploaded csv file is used to add a new outcome group if needed, as well
 #as update or add the settings for an outcome. Only one rating scale can be used for each file being uploaded.
 
-#This is a heavily modified version of kajiagga' outcome importer (https://github.com/kajigga/canvas-contrib/tree/master/API_Examples/import_outcomes/python).
+#This is a heavily modified version of kajiagga's outcome importer (https://github.com/kajigga/canvas-contrib/tree/master/API_Examples/import_outcomes/python).
 #kept the access to csv files through kajiagga's functions, rewrote most of the logic on process for searching, adding, updating outcomes
 #modifided the kajiagga csv file: added columns for account_id and outcome group vendor, renamed other fields and removed parent_id field
 
