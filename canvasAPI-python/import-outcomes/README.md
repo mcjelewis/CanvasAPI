@@ -15,9 +15,10 @@ This is a heavily modified version of kajiagga's [outcome importer](https://gith
 ## CSV FILE
 ##################################################
 You will need to format a csv file  
-  * Required Header Field Namess:'account_id','outcome_group_id','outcome_gropu_vendor_guid','outcome_id','outcome_vendor_guid','outcome_group_id','title','description','calculation_method','calculation_int','mastery_points'  
+  * Required Header  
+>  Field Namess:'account_id','outcome_group_id','outcome_gropu_vendor_guid','outcome_id','outcome_vendor_guid','outcome_group_id','title','description','calculation_method','calculation_int','mastery_points'  
   * At the end of the header row add the rating scale title that will be used for this set of outcomes. For example 'Exceeds Expectations', 'Mets Expectations', 'Does Not Met Expectations'  
-  * The point values for each rating are place in the data row under each outcome scale title.   
+  * The point values for each rating are placed in the data row under each outcome scale title.   
   * Note that for eace csv file, only one rating scale can be used.  
 
 
