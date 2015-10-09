@@ -24,7 +24,7 @@
 ##################################################
 ################## DIRECTIONS ####################
 ##################################################
-# DIRECTIONS: Edit the below variable to match your institution domain
+# DIRECTIONS: Edit the below variable to match your institution's Canvas domain
 domain = "enter your domain here"
 
 ##################################################
@@ -192,7 +192,7 @@ def enterOutcome(outcome, url):
 parser = argparse.ArgumentParser()
 parser.add_argument('--outcomesfile',required=True,help='path to the outcomes.csv file')
 
-courses = input('Are these outcomes to be added to a cours? (Y,N)')
+courses = input('Are these outcomes to be added to a course? (Y,N)')
 if courses == 'Y':
   course_id = input('Enter Canvas Course ID (required field):')
   if not course_id:
