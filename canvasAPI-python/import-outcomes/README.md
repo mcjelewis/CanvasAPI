@@ -15,7 +15,7 @@ This is a heavily modified version of kajiagga's [outcome importer](https://gith
 ## CSV FILE
 ##################################################
 *Required Header *   
->  Field Names:'account_id','outcome_group_id','outcome_gropu_vendor_guid','outcome_id','outcome_vendor_guid','outcome_group_id','title','description','calculation_method','calculation_int','mastery_points'  
+>  Field Names: 'account_id','outcome_group_id','outcome_gropu_vendor_guid','outcome_id','outcome_vendor_guid','outcome_group_id','title','description','calculation_method','calculation_int','mastery_points'  
 
 At the end of the header row add the rating scale title that will be used for this set of outcomes. For example 'Exceeds Expectations', 'Mets Expectations', 'Does Not Met Expectations'  
 
