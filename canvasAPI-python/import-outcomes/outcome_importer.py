@@ -9,7 +9,7 @@
 #This code is used to upload new outcomes into Canvas at an account level. Data from an uploaded csv file is used to add a new outcome group if needed, as well
 #as update or add the settings for an outcome. Only one rating scale can be used for each file being uploaded.
 
-#This is a heavily modified version of kajiagga's outcome importer (https://github.com/kajigga/canvas-contrib/tree/master/API_Examples/import_outcomes/python).
+#This is a heavily modified version of kajiagga' outcome importer (https://github.com/kajigga/canvas-contrib/tree/master/API_Examples/import_outcomes/python).
 #kept the access to csv files through kajiagga's functions, rewrote most of the logic on process for searching, adding, updating outcomes
 #modifided the kajiagga csv file: added columns for account_id and outcome group vendor, renamed other fields and removed parent_id field
 
@@ -24,8 +24,8 @@
 ##################################################
 ################## DIRECTIONS ####################
 ##################################################
-# DIRECTIONS: Edit the below variable to match your institution's Canvas domain
-domain = "enter your domain here"
+# DIRECTIONS: Edit the below two variables to match your institution domain and your personal token
+domain = "ewu.beta.instructure.com"
 
 ##################################################
 ########## DO NOT EDIT BELOW THIS LINE ###########
@@ -66,7 +66,7 @@ def paginated_outcome_groups(outcome,apiType):
   # Get outcome subgroups (this needs to walk)
   groupOutcomeList = []
   all_done = False
-  url = 'https://%s/api/v1/%s/outcome_groups' % (domain,apiType)
+  url = 'https://%s/api/v1/%s/outcome_groups?per_page=100' % (domain,apiType)
   while not all_done:
     response = requests.get(url,headers=get_headers())
     if not response.json():
@@ -86,7 +86,7 @@ def paginated_outcomes(outcomeGroupList,apiType):
   # Get outcome subgroups (this needs to walk)
     for groups in outcomeGroupList:
         all_done = False
-        url = 'https://%s/api/v1/%s/outcome_groups/%d/outcomes' % (domain,apiType,groups['id'])
+        url = 'https://%s/api/v1/%s/outcome_groups/%d/outcomes?per_page=100' % (domain,apiType,groups['id'])
         while not all_done:
             response = requests.get(url,headers=get_headers())
             if not response.json():
@@ -192,7 +192,7 @@ def enterOutcome(outcome, url):
 parser = argparse.ArgumentParser()
 parser.add_argument('--outcomesfile',required=True,help='path to the outcomes.csv file')
 
-courses = input('Are these outcomes to be added to a course? (Y,N)')
+courses = input('Are these outcomes to be added to a cours? (Y,N)')
 if courses == 'Y':
   course_id = input('Enter Canvas Course ID (required field):')
   if not course_id:
