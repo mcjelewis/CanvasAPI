@@ -459,24 +459,21 @@ if courseFilter:
 else:
   courseNumbers = False
   displayTerm = input('Do you want to display term ids? (Y=yes, else enter the termid, or enter All to use all terms):')
+  termData = get_terms(root_account_id)
   if displayTerm.upper() == 'Y':
-    termData = get_terms(root_account_id)
     print('Term ID     NAME')
-    termList=[]
-    for t in termData:
-      termList.append(t['term_id'])
+  termList=[]
+  for t in termData:
+    termList.append(t['term_id'])
+    if displayTerm.upper() == 'Y':
       print(t['term_id'], ' - ', t['term_name'])
-      
-    termID = input('Enter the Term ID:')
-  #elif not isinstance(int(displayTerm), int):
-  #  if not displayTerm.upper() == 'ALL':
-  #    termID = ''
-  else:
-    termID = displayTerm
-    termList = [displayTerm]
-    
-  #if isinstance(termID, int) == False:
-  #    termID = ''
+  if displayTerm.upper() != 'ALL':
+    if displayTerm.upper() == 'Y':
+      termID = input('Enter the Term ID:')
+      termList = [termID]
+    else:
+      termID = displayTerm
+      termList = [displayTerm]
       
   if not termID:
       print('#########################################################################')
