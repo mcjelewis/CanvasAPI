@@ -1,18 +1,20 @@
 #!/usr/bin/env python
 #################################################
+################################################
 #Author: Matt Lewis
 #Department: Instructional Technology
 #Institution: Eastern Washington University
 ##################################################
 ################## DESCRIPTION ###################
 ##################################################
-#This code is used to collect the file submissions to assignments marked as using Turnitin for a specific term.
+#This code was used to collect the file submissions to assignments marked as using Turnitin for a specific term.
 #Note that the Turnitin plugin must be made available to your account otherwise the turnitin data is hidden and is not shown in the API calls.
 
-#This was a one off project, so once I got what I needed, I stopped working on it.  So my apologies for not
-#commenting the code better.
+#This was a one off project, so once I got what I needed, I stopped working on it.  My apologies for not
+#commenting the code better. It also, I'm sure, is not the most efficient script and takes a while to run.
+#But we got what we needed to migrate past assignment submissions.
 
-#When this script is run:
+#When this script runs:
 #1. It will first ask for your Canvas Token ID.
 #2. Next it will ask to enter the domain used for your Canvas instance.
 #3. Next it will ask if you want to collect submissions from a specific course (good for testing)
@@ -20,21 +22,26 @@
 #5. If question 4 is yes, it will display a list of term names and id numbers for reference.
 #6. Next it will ask you to 'Enter the Term ID'
 #7. Next it will ask if you want to filter to a select sub-account
+#8. The script then makes Canvas API calls and steps through all the courses in the term and all the assignments, identifies the assignments marked 
+#as Turnitin, then downloads all the submitted files of the right file type for that assignment.
 
-
+#list of file types downloaded: "doc", "docx", "pdf", "rtf", "txt", "ps", "wp", "odt", "ods", "odp"
 ##################################################
 ################## DIRECTIONS ####################
 ##################################################
-# DIRECTIONS: Edit the below variables to match your institution domain and your personal token
+# DIRECTIONS: Edit the below variables to match your institution domain
 csvFileName = "Canvas-turnitin_submissions"
-#add you folder path here for where you'd like the files saved:
-folderPath1 = ""
+#add your folder path here for where you'd like the files saved: in addition, add a folder titled 'submissions'.
+#Below is an example of my folder structure.
 #folderPath1 = "/Canvas-python/turnitin/submissions/"
-hasData = False
+folderPath1 = ""
+
+#It was simpler to just hard set the sub account id numbers than to create a function to grab them. Edit below to match your subaccount id numbers
+collegeLevelSubAccounts=[100101, 100102, 100103, 100104, 100105]
 ##################################################
 ########## DO NOT EDIT BELOW THIS LINE ###########
 ##################################################
-
+hasData = False
 
 import requests
 import simplejson as json
@@ -46,7 +53,7 @@ import csv
 import pprint
 import os
 import getpass
-
+import configparser
 from timeit import default_timer as timer
 
 start = timer()
@@ -60,7 +67,17 @@ fileCountAll=0
 ########################################################################### 
 def get_headers():
   return {'Authorization': 'Bearer %s' % token}
-
+###########################################################################
+def confirm_token():
+  url = "https://%s/api/v1/users/self/activity_stream/summary" % (domain)
+  response = requests.get(url,headers=get_headers())
+  if response.status_code == 200:
+    confirm = True
+  else:
+    confirm = False
+    print('The entered Canvas token did not authenticate.')
+    
+  return confirm
 ###########################################################################
 def flattenjson( b, delim ):
     val = {}
@@ -272,8 +289,8 @@ def get_assignments(courseList):
       else:
         for s in response.json():
           t = flattenjson(s, "__")
-          #print('enabled:', s['vericite_enabled'])
-          if t['vericite_enabled']:
+          #print('enabled:', s['turnitin_enabled'])
+          if t['turnitin_enabled']:
             #print('enabled')
             #if s['published']:
               #if s['has_submitted_submissions']:
@@ -292,7 +309,7 @@ def get_assignments(courseList):
                 assignment.update({'published' : t['published'], 'workflow_state' : i['workflow_state']})
                 assignment.update({'has_submitted_submittions' : t['has_submitted_submissions'], 'submission_types' : t['submission_types'], 'submissions_download_url' : t['submissions_download_url']})
                 assignment.update({'peer_reviews' : t['peer_reviews'], 'points_possible' : t['points_possible']})
-                assignment.update({'vericite_enabled' : t['vericite_enabled']})
+                assignment.update({'turnitin_enabled' : t['turnitin_enabled']})
       
                 assignmentList.append(assignment)
                 if t['has_submitted_submissions']:
@@ -384,18 +401,6 @@ def download_submissions(courseID,assignmentID, folderPath):
 ###########################################################################
 ###########################################################################
 ###########################################################################
-
-token = getpass.getpass('Canvas Token:')
-
-if not token:
-  token = input('Canvas Token is a required field:')
-if not token:
-    print('#########################################################################')
-    print('The Canvas Token is a required field.')
-    print('Exiting script.')
-    print('#########################################################################')
-    exit()
-
 domain = input('Domain Name (i.e.: ewu.test.instructure.com):')
 if not domain:
     print('#########################################################################')
@@ -403,7 +408,23 @@ if not domain:
     print('Exiting script.')
     print('#########################################################################')
     exit()
-    
+
+###########################################################################
+token = getpass.getpass('Canvas Token:')
+confirmToken = confirm_token()
+
+if not token or confirmToken == False:
+  token = getpass.getpass('Canvas Token is a required field:')
+  confirmToken = confirm_token()
+
+if not token or confirmToken == False:
+    print('#########################################################################')
+    print('The Canvas Token is a required field.')
+    print('Exiting script.')
+    print('#########################################################################')
+    exit()
+ 
+###########################################################################   
 root_account_id = getRootID()
 if root_account_id == "No Root":
   print('#########################################################################')
@@ -411,6 +432,7 @@ if root_account_id == "No Root":
   print('#########################################################################')
   exit()
 
+###########################################################################
 
 
 
@@ -471,8 +493,7 @@ else:
   else:
     account_id = root_account_id
     #
-    collegeSubAccounts=[102894, 102895, 102896, 102897, 102898, 103422]
-      
+    collegeSubAccounts=collegeLevelSubAccounts 
   #print('#########################################################################')
   #courseList = get_courses(account_id, termID)
   #print('Count of rows in courseList:',len(courseList))
